@@ -24,21 +24,21 @@ public class CarparkUbi {
         return null;
     }
 
-    public ChargingPoint disconnect(String chargingPointId){
+    public ChargingPoint disconnect(String chargingPointId) {
         return null;
     }
 
     /**
      * Check the connected Charging Points and re-distribute the charge between them accordingly
      */
-    private void redistributeCharge(){
+    private void redistributeCharge() {
 
     }
 
     /**
      * @return List of all information for all Charging Points in this carpark station
      */
-    public List<ChargingPoint> describe(){
+    public List<ChargingPoint> describe() {
         return null;
     }
 

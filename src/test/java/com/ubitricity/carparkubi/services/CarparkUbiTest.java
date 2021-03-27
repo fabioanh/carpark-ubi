@@ -55,29 +55,114 @@ class CarparkUbiTest {
     @Test
     public void disconnect_singleChargingPointDisconnected_allChargingPointsDisconnected() {
         // given
+        connectChargingPoints(1);
         // when
+        ChargingPoint disconnectedChargingPoint = carparkUbi.disconnect("CP3");
         // then
+        assertThat(disconnectedChargingPoint.getCurrent()).isEqualTo(0);
+        assertThat(disconnectedChargingPoint.getConnected()).isFalse();
+        List<ChargingPoint> report = carparkUbi.describe();
+        report.forEach(cp -> {
+            assertThat(cp.getConnected()).isFalse();
+            assertThat(cp.getCurrent()).isEqualTo(0);
+        });
     }
 
     @Test
     public void disconnect_threeCarsLeftConnected_properCurrentDistribution() {
         // given
+        connectChargingPoints(4);
         // when
+        ChargingPoint disconnectedChargingPoint = carparkUbi.disconnect("CP9");
         // then
+        assertThat(disconnectedChargingPoint.getCurrent()).isEqualTo(0);
+        assertThat(disconnectedChargingPoint.getConnected()).isFalse();
+        List<ChargingPoint> report = carparkUbi.describe();
+        report.stream()
+                .filter(cp -> cp.getIdentifier().equals("CP9")
+                        || cp.getIdentifier().equals("CP7")
+                        || cp.getIdentifier().equals("CP1")
+                        || cp.getIdentifier().equals("CP4")
+                        || cp.getIdentifier().equals("CP6")
+                        || cp.getIdentifier().equals("CP8")
+                )
+                .forEach(cp -> {
+                    assertThat(cp.getConnected()).isFalse();
+                    assertThat(cp.getCurrent()).isEqualTo(0);
+                });
+        report.stream()
+                .filter(cp -> cp.getIdentifier().equals("CP3")
+                        || cp.getIdentifier().equals("CP5")
+                        || cp.getIdentifier().equals("CP10")
+                        || cp.getIdentifier().equals("CP2"))
+                .forEach(cp -> {
+                    assertThat(cp.getConnected()).isTrue();
+                    assertThat(cp.getCurrent()).isEqualTo(20);
+                });
     }
 
     @Test
     public void disconnect_fiveCarsLeftConnected_properCurrentDistribution() {
         // given
+        connectChargingPoints(6);
         // when
+        ChargingPoint disconnectedChargingPoint = carparkUbi.disconnect("CP9");
         // then
+        assertThat(disconnectedChargingPoint.getCurrent()).isEqualTo(0);
+        assertThat(disconnectedChargingPoint.getConnected()).isFalse();
+        List<ChargingPoint> report = carparkUbi.describe();
+        report.stream()
+                .filter(cp -> cp.getIdentifier().equals("CP9")
+                        || cp.getIdentifier().equals("CP1")
+                        || cp.getIdentifier().equals("CP4")
+                        || cp.getIdentifier().equals("CP6")
+                        || cp.getIdentifier().equals("CP8"))
+                .forEach(cp -> {
+                    assertThat(cp.getConnected()).isFalse();
+                    assertThat(cp.getCurrent()).isEqualTo(0);
+                });
+        report.stream()
+                .filter(cp -> cp.getIdentifier().equals("CP3")
+                        || cp.getIdentifier().equals("CP5")
+                        || cp.getIdentifier().equals("CP10")
+                        || cp.getIdentifier().equals("CP2")
+                        || cp.getIdentifier().equals("CP7"))
+                .forEach(cp -> {
+                    assertThat(cp.getConnected()).isTrue();
+                    assertThat(cp.getCurrent()).isEqualTo(20);
+                });
     }
 
     @Test
     public void disconnect_nineCarsLeftConnected_properCurrentDistribution() {
         // given
+        connectChargingPoints(10);
         // when
+        ChargingPoint disconnectedChargingPoint = carparkUbi.disconnect("CP2");
         // then
+        assertThat(disconnectedChargingPoint.getCurrent()).isEqualTo(0);
+        assertThat(disconnectedChargingPoint.getConnected()).isFalse();
+        List<ChargingPoint> report = carparkUbi.describe();
+        report.stream()
+                .filter(cp -> cp.getIdentifier().equals("CP2"))
+                .findFirst()
+                .ifPresent(cp -> {
+                    assertThat(cp.getConnected()).isFalse();
+                    assertThat(cp.getCurrent()).isEqualTo(0);
+                });
+        report.stream()
+                .filter(cp -> cp.getIdentifier().equals("CP3"))
+                .findFirst()
+                .ifPresent(cp -> {
+                    assertThat(cp.getConnected()).isTrue();
+                    assertThat(cp.getCurrent()).isEqualTo(20);
+                });
+        report.stream()
+                .filter(cp -> !(cp.getIdentifier().equals("CP3") || cp.getIdentifier().equals("CP2")))
+                .forEach(cp -> {
+                    assertThat(cp.getConnected()).isTrue();
+                    assertThat(cp.getCurrent()).isEqualTo(10);
+                });
     }
 
     @Test
@@ -106,7 +191,7 @@ class CarparkUbiTest {
         report.stream()
                 .filter(cp -> cp.getIdentifier().equals("CP3"))
                 .findFirst()
-                .ifPresent((cp) -> {
+                .ifPresent(cp -> {
                     assertThat(cp.getConnected()).isTrue();
                     assertThat(cp.getCurrent()).isEqualTo(20);
                 });
@@ -146,7 +231,7 @@ class CarparkUbiTest {
         report.stream()
                 .filter(cp -> cp.getIdentifier().equals("CP10"))
                 .findFirst()
-                .ifPresent((cp) -> {
+                .ifPresent(cp -> {
                     assertThat(cp.getConnected()).isFalse();
                     assertThat(cp.getCurrent()).isEqualTo(0);
                 });
