@@ -134,6 +134,15 @@ class CarparkUbiTest {
     }
 
     @Test
+    public void connect_connectNonExistingChargingPoint_exception() {
+        // given
+        connectChargingPoints(1);
+        // when
+        // then
+        assertThrows(IllegalStateException.class, () -> carparkUbi.connect("CP42"));
+    }
+
+    @Test
     public void disconnect_singleChargingPointDisconnected_allChargingPointsDisconnected() {
         // given
         connectChargingPoints(1);
@@ -252,7 +261,15 @@ class CarparkUbiTest {
         // when
         // then
         assertThrows(IllegalStateException.class, () -> carparkUbi.disconnect("CP5"));
+    }
 
+    @Test()
+    public void disconnect_disconnectNonExistingChargingPoint_exception() {
+        // given
+        connectChargingPoints(1);
+        // when
+        // then
+        assertThrows(IllegalStateException.class, () -> carparkUbi.disconnect("CP42"));
     }
 
     @Test
