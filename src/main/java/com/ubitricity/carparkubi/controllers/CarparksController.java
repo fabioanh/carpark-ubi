@@ -1,15 +1,22 @@
 package com.ubitricity.carparkubi.controllers;
 
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping(CarparksController.CARPARKS)
 public class CarparksController {
-    private static final String CARPARKS = "carparks";
+    public static final String CARPARKS = "carparks";
+    private static final String CHARGING_POINTS = "chargingPoints";
 
-    @PutMapping(path = CARPARKS+"/{name}")
-    public void updateCarpark(@PathVariable String carparkName, @RequestBody Carpark carpark){
+    @PutMapping(path ="/{carparkName}/" + CHARGING_POINTS + "{chargingPointId}")
+    public void updateChargingPoint(@PathVariable String carparkName,
+                              @PathVariable String chargingPointId,
+                              @RequestBody ChargingPointDTO chargingPoint) {
     }
+
+    @GetMapping(path = "/{carparkName}/"+CHARGING_POINTS)
+    public void getChargingPointsReport(@PathVariable String carparkName){
+
+    }
+
 }

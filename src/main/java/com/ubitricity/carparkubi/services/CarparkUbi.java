@@ -33,7 +33,7 @@ public class CarparkUbi {
      */
     public synchronized ChargingPoint connect(String chargingPointId) {
         if (!chargingPointIds.contains(chargingPointId)) {
-            throw new IllegalStateException("Charging point not recognised in the Carpark-Ubi site");
+            throw new ChargingPointNotFoundException();
         }
         if (chargingQueue.stream().map(ChargingPoint::getIdentifier).anyMatch(id -> id.equals(chargingPointId))) {
             throw new IllegalStateException("Charging point is already in use");
