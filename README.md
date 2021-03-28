@@ -84,6 +84,11 @@ Please add any details about your ideas and considerations to this README and ad
   implementation has a very limited scope mixing two approaches for Rest Exception handling: `ControllerAdvice`
   and throwing directly the Spring `ResponseStatusException`. Both of them could be unified in a production application
   having consistent bodies with detailed information about the errors.
+- The two exceptions `IllegalStateException` and `ChargingPointNotFoundException` were created within the scope of a
+  prototyping application. In a final production version the exception handling should be thought more carefully
+  handling the conflict status in the application with a different application exception. One could think that all the
+  exception handling could be done using only the Spring class `ResponseStatusException`. Nonetheless, this would not be
+  a good approach as it would mix the logic belonging to the REST controller into the Business classes.
 - The creation of the `ChargingPointDTO` class may seem useless in this context as the solution could be implemented
   using only the class `ChargingPoint` in the `services` package. Nevertheless, this separation would be useful in a
   more complete application to add validations to the object used in the controller and simply have a better separation
