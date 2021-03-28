@@ -18,7 +18,7 @@ public class CarparkUbi {
     public static final int NUM_CHARGE_POINTS = 10;
     public static final int TOTAL_POWER = 100;
     public static final int MIN_ASSIGNABLE_CHARGE = TOTAL_POWER / NUM_CHARGE_POINTS;
-    private final List<ChargingPoint> chargingQueue = Collections.synchronizedList(new LinkedList<>());
+    private final List<ChargingPoint> chargingQueue = new LinkedList<>();
     private final Set<String> chargingPointIds;
 
     public CarparkUbi() {
@@ -31,7 +31,7 @@ public class CarparkUbi {
      * @param chargingPointId Identifier of the charging point to be connected
      * @return Connected charging point with its charge value updated
      */
-    public ChargingPoint connect(String chargingPointId) {
+    public synchronized ChargingPoint connect(String chargingPointId) {
         if (!chargingPointIds.contains(chargingPointId)) {
             throw new IllegalStateException("Charging point not recognised in the Carpark-Ubi site");
         }
@@ -50,7 +50,7 @@ public class CarparkUbi {
      * @param chargingPointId Identifier of the charging point to be disconnected
      * @return Disconnected charging point with its disconnected values
      */
-    public ChargingPoint disconnect(String chargingPointId) {
+    public synchronized ChargingPoint disconnect(String chargingPointId) {
         if (!chargingPointIds.contains(chargingPointId)) {
             throw new IllegalStateException("Charging point not recognised in the Carpark-Ubi site");
         }

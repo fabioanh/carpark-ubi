@@ -4,7 +4,12 @@ import com.ubitricity.carparkubi.model.ChargingPoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -122,6 +127,21 @@ class CarparkUbiTest {
             assertThat(cp.getConnected()).isTrue();
             assertThat(cp.getCurrent()).isEqualTo(10);
         });
+    }
+
+    @Test
+    public void connect_multiThreadSamePointConnected_onlyOneConnectionAllowed() throws InterruptedException, NoSuchFieldException, IllegalAccessException {
+        // given
+        ExecutorService service = Executors.newFixedThreadPool(30);
+        // when
+        IntStream.range(0, 30)
+                .forEach(count -> service.submit(() -> carparkUbi.connect("CP3")));
+        service.awaitTermination(1000, TimeUnit.MILLISECONDS);
+        // then
+        Field chargingQueueField = carparkUbi.getClass().getDeclaredField("chargingQueue");
+        chargingQueueField.setAccessible(true);
+        List<ChargingPoint> chargingQueue = (List<ChargingPoint>) chargingQueueField.get(carparkUbi);
+        assertThat(chargingQueue).hasSize(1);
     }
 
     @Test
