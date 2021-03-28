@@ -18,6 +18,7 @@ public class CarparkUbi {
     public static final int NUM_CHARGE_POINTS = 10;
     public static final int TOTAL_POWER = 100;
     public static final int MIN_ASSIGNABLE_CHARGE = TOTAL_POWER / NUM_CHARGE_POINTS;
+    public static final String NAME = "ubi";
     private final List<ChargingPoint> chargingQueue = new LinkedList<>();
     private final Set<String> chargingPointIds;
 
