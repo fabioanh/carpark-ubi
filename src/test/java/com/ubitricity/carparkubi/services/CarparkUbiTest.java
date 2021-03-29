@@ -149,8 +149,18 @@ class CarparkUbiTest {
         // given
         connectChargingPoints(1);
         // when
+        ChargingPoint connectedChargingPoint = carparkUbi.connect("CP3");
         // then
-        assertThrows(IllegalStateException.class, () -> carparkUbi.connect("CP3"));
+        assertThat(connectedChargingPoint.getConnected()).isTrue();
+        assertThat(connectedChargingPoint.getCurrent()).isEqualTo(20);
+        List<ChargingPoint> report = carparkUbi.describe();
+        report.stream()
+                .filter(cp -> cp.getIdentifier().equals("CP3"))
+                .findFirst()
+                .ifPresent(cp -> {
+                    assertThat(cp.getConnected()).isTrue();
+                    assertThat(cp.getCurrent()).isEqualTo(20);
+                });
     }
 
     @Test
@@ -159,7 +169,7 @@ class CarparkUbiTest {
         connectChargingPoints(1);
         // when
         // then
-        assertThrows(IllegalStateException.class, () -> carparkUbi.connect("CP42"));
+        assertThrows(ChargingPointNotFoundException.class, () -> carparkUbi.connect("CP42"));
     }
 
     @Test
@@ -279,8 +289,10 @@ class CarparkUbiTest {
         // given
         connectChargingPoints(1);
         // when
+        ChargingPoint disconnectedChargingPoint = carparkUbi.disconnect("CP5");
         // then
-        assertThrows(IllegalStateException.class, () -> carparkUbi.disconnect("CP5"));
+        assertThat(disconnectedChargingPoint.getCurrent()).isEqualTo(0);
+        assertThat(disconnectedChargingPoint.getConnected()).isFalse();
     }
 
     @Test()
@@ -289,7 +301,7 @@ class CarparkUbiTest {
         connectChargingPoints(1);
         // when
         // then
-        assertThrows(IllegalStateException.class, () -> carparkUbi.disconnect("CP42"));
+        assertThrows(ChargingPointNotFoundException.class, () -> carparkUbi.disconnect("CP42"));
     }
 
     @Test

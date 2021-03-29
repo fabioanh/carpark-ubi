@@ -57,7 +57,7 @@ Please add any details about your ideas and considerations to this README and ad
 
 
 ## Considerations:
-- The implemented solution uses the PUT HTTP operation as the trigger for all changes in the connection operations. This
+- The implemented solution uses the `PUT` HTTP operation as the trigger for all changes in the connection operations. This
   could be something changed depending on the approach taken by the team as consensus for the API. Instead, what is 
   known as a [controller resource](http://uniknow.github.io/AgileDev/site/0.1.9-SNAPSHOT/parent/rest/resource-archetypes.html#:~:text=controller%20resource)
   could be used to address the connect/disconnect operations. As a personal preference, I try to solve as many problems
@@ -65,6 +65,8 @@ Please add any details about your ideas and considerations to this README and ad
   endpoints as suggested by the controller approach, this may be considered a typical RESTful philosophical discussion).
   In any case it's important to recognise the power of different approaches when the advantages are significant in real
   life scenarios.
+- Implementing the operation as a `PUT` request means that the request should be Idempotent. This was also taken care of
+  in the implementation. (Initially I forgot about it, but this was successfully patched in the end)
 - The name/identifier of the charge points is assigned automatically for pragmatical purposes. In real life these ids
   could be set to more meaningful values or could be customised from the UI with operations to manipulate the properties
   of the park-car.
@@ -81,14 +83,14 @@ Please add any details about your ideas and considerations to this README and ad
   ubi carpark. In that case the `carparks` endpoint would be used with a different identifier. For now the only
   identifier working for a carpark is **ubi**. The handling for this specific carpark was hard-coded in the application.
 - Exception handling in Rest endpoints is a topic that deserves discussion and careful design. In this case the
-  implementation has a very limited scope mixing two approaches for Rest Exception handling: `ControllerAdvice`
-  and throwing directly the Spring `ResponseStatusException`. Both of them could be unified in a production application
-  having consistent bodies with detailed information about the errors.
-- The two exceptions `IllegalStateException` and `ChargingPointNotFoundException` were created within the scope of a
-  prototyping application. In a final production version the exception handling should be thought more carefully
-  handling the conflict status in the application with a different application exception. One could think that all the
-  exception handling could be done using only the Spring class `ResponseStatusException`. Nonetheless, this would not be
-  a good approach as it would mix the logic belonging to the REST controller into the Business classes.
+  implementation is throwing directly the Spring `ResponseStatusException`. In case of having the application ready for
+  production it would be good to have consistent bodies with detailed information about the errors. This would need
+  further work using a `ControllerAdvice` approach.
+- The `ChargingPointNotFoundException` was created within the scope of a prototyping application. In a final production 
+  version the exception handling should be thought more carefully having better descriptions and better integration with
+  the controllers. One could think that all the exception handling could be done using only the Spring class 
+  `ResponseStatusException`. Nonetheless, this would not be a good approach as it would mix the logic belonging to the 
+  REST controller into the Business classes.
 - The creation of the `ChargingPointDTO` class may seem useless in this context as the solution could be implemented
   using only the class `ChargingPoint` in the `services` package. Nevertheless, this separation would be useful in a
   more complete application to add validations to the object used in the controller and simply have a better separation

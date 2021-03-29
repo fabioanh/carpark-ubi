@@ -1,6 +1,7 @@
 package com.ubitricity.carparkubi.controllers;
 
 import com.ubitricity.carparkubi.services.CarparkUbi;
+import com.ubitricity.carparkubi.services.ChargingPointNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -25,10 +26,14 @@ public class CarparksController {
                                                 @PathVariable String chargingPointId,
                                                 @RequestBody ChargingPointDTO chargingPoint) {
         if (CarparkUbi.NAME.equals(carparkName)) {
-            if (chargingPoint.getConnected()) {
-                return new ChargingPointDTO(carparkUbi.connect(chargingPointId));
+            try {
+                if (chargingPoint.getConnected()) {
+                    return new ChargingPointDTO(carparkUbi.connect(chargingPointId));
+                }
+                return new ChargingPointDTO(carparkUbi.disconnect(chargingPointId));
+            } catch (ChargingPointNotFoundException e) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Charging point not found", null);
             }
-            return new ChargingPointDTO(carparkUbi.disconnect(chargingPointId));
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Carpark not found", null);
     }

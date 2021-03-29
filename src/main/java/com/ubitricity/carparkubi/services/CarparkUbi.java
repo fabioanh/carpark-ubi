@@ -3,7 +3,6 @@ package com.ubitricity.carparkubi.services;
 import com.ubitricity.carparkubi.model.ChargingPoint;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -36,13 +35,15 @@ public class CarparkUbi {
         if (!chargingPointIds.contains(chargingPointId)) {
             throw new ChargingPointNotFoundException();
         }
-        if (chargingQueue.stream().map(ChargingPoint::getIdentifier).anyMatch(id -> id.equals(chargingPointId))) {
-            throw new IllegalStateException("Charging point is already in use");
-        }
-        ChargingPoint chargingPoint = new ChargingPoint(chargingPointId, 0, true);
-        chargingQueue.add(0, chargingPoint);
-        redistributeCharge();
-        return chargingPoint;
+        return chargingQueue.stream()
+                .filter(cp -> cp.getIdentifier().equals(chargingPointId))
+                .findFirst()
+                .orElseGet(() -> {
+                    ChargingPoint chargingPoint = new ChargingPoint(chargingPointId, 0, true);
+                    chargingQueue.add(0, chargingPoint);
+                    redistributeCharge();
+                    return chargingPoint;
+                });
     }
 
     /**
@@ -53,14 +54,13 @@ public class CarparkUbi {
      */
     public synchronized ChargingPoint disconnect(String chargingPointId) {
         if (!chargingPointIds.contains(chargingPointId)) {
-            throw new IllegalStateException("Charging point not recognised in the Carpark-Ubi site");
-        }
-        if (chargingQueue.stream().map(ChargingPoint::getIdentifier).noneMatch(id -> id.equals(chargingPointId))) {
-            throw new IllegalStateException("Charging point is already disconnected");
+            throw new ChargingPointNotFoundException();
         }
         ChargingPoint chargingPoint = new ChargingPoint(chargingPointId, 0, false);
-        chargingQueue.remove(chargingPoint);
-        redistributeCharge();
+        if (chargingQueue.stream().map(ChargingPoint::getIdentifier).anyMatch(id -> id.equals(chargingPointId))) {
+            chargingQueue.remove(chargingPoint);
+            redistributeCharge();
+        }
         return chargingPoint;
     }
 

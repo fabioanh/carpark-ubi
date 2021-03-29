@@ -75,26 +75,6 @@ class CarparksControllerTest {
     }
 
     @Test
-    public void updateChargingPoint_attemptConnectingConnectedDevice_errorResponse() throws Exception {
-        // given
-        var postBody = """
-                {
-                    "id": "CP3",
-                    "connected": true
-                }
-                """;
-        when(carparkUbi.connect("CP3"))
-                .thenThrow(new IllegalStateException("Charging Point already connected"));
-        // when
-        ResultActions response = this.mockMvc.perform(put("/carparks/ubi/chargingPoints/CP3")
-                .content(postBody)
-                .contentType("application/json")
-                .characterEncoding("utf-8"));
-        // then
-        response.andExpect(status().isConflict());
-    }
-
-    @Test
     public void updateChargingPoint_attemptConnectingNonExistentDevice_errorResponse() throws Exception {
         // given
         var postBody = """
@@ -140,27 +120,6 @@ class CarparksControllerTest {
         // then
         response.andExpect(status().isOk())
                 .andExpect(content().json(expectedJson));
-    }
-
-    @Test
-    public void updateChargingPoint_attemptDisconnectingDisconnectedDevice_errorResponse() throws Exception {
-        // given
-        var postBody = """
-                {
-                    "id": "CP3",
-                    "connected": false
-                }
-                """;
-        when(carparkUbi.disconnect("CP3"))
-                .thenThrow(new IllegalStateException("Charging Point already connected"));
-        // when
-        ResultActions response = this.mockMvc.perform(put("/carparks/ubi/chargingPoints/CP3")
-                .content(postBody)
-                .contentType("application/json")
-                .characterEncoding("utf-8"));
-        // then
-        response.andExpect(status().isConflict())
-                .andDo(MockMvcResultHandlers.print());
     }
 
     @Test
