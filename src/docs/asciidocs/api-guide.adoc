@@ -1,0 +1,93 @@
+= Carpark Ubi
+
+Fabio Navarrete <fabioanh@gmail.com>
+
+:doctype: book
+:icons: font
+:toc: left
+
+[[Carparks]]
+= Carparks REST Endpoint
+
+Entry point to handle Carparks.
+Exposes the endpoints that allow modifications and requests related to Carparks.
+In the current state the operations and queries can run only for the carpark with identifier **ubi**.
+
+== Connect/Disconnect charging point
+
+In order to connect or disconnect a charging point an update operation should be issued to the
+`/carparks/ubi/chargingPoints/{chargingPointId}` endpoint.
+Changing the `connected` value would trigger a connect or disconnect action.
+These changes are achieved using a `PUT` request.
+
+==== Path Parameters
+
+include::{snippets}/connect-charging-point/path-parameters.adoc[]
+
+=== - Connect
+
+.request
+include::{snippets}/connect-charging-point/http-request.adoc[]
+
+.curl-request
+include::{snippets}/connect-charging-point/curl-request.adoc[]
+
+.response
+include::{snippets}/connect-charging-point/http-response.adoc[]
+
+==== Response body description:
+
+include::{snippets}/connect-charging-point/response-fields.adoc[]
+
+=== - Disconnect
+
+.request
+include::{snippets}/disconnect-charging-point/http-request.adoc[]
+
+.curl-request
+include::{snippets}/disconnect-charging-point/curl-request.adoc[]
+
+.response
+include::{snippets}/disconnect-charging-point/http-response.adoc[]
+
+==== Response body description:
+
+include::{snippets}/disconnect-charging-point/response-fields.adoc[]
+
+== List the status of the carpark
+
+The carpark current status could be seen listing all its charging points.
+At the moment information available is present only for the carpark with identifier **ubi**.
+In order to list all the carging points a `GET` request is expected.
+
+.request
+include::{snippets}/get-charging-points/http-request.adoc[]
+
+.curl-request
+include::{snippets}/get-charging-points/curl-request.adoc[]
+
+.response
+include::{snippets}/get-charging-points/http-response.adoc[]
+
+==== Response body description:
+include::{snippets}/get-charging-points/response-fields.adoc[]
+
+=== Sample Errors
+
+==== - Non Existent Charging Point
+
+The charging point identifier doesn't exist in the carpark
+
+.request
+include::{snippets}/charging-point-not-found/http-request.adoc[]
+
+.response
+include::{snippets}/charging-point-not-found/http-response.adoc[]
+
+==== - Non Existent Carpark
+
+.request
+include::{snippets}/carpark-not-found/http-request.adoc[]
+
+.response
+include::{snippets}/carpark-not-found/http-response.adoc[]
