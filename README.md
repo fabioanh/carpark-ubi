@@ -99,7 +99,8 @@ Please add any details about your ideas and considerations to this README and ad
   of concerns in the application.
 - The scope of the task was very small, hence adding logging was skipped. Some `debug` logging could be useful in the
   business classes. Nevertheless, as the endpoints are expected to be called often, having `info` logs in a task like
-  this one doesn't require access logs just to see how the endpoint is called or how the connection queue behaves.
-- The chosen documentation method was using Spring RestDocs. I like this method because real objects are generated for 
+  this one would overflow the logs with not so useful information. This task doesn't require access logs just to see 
+  how the endpoint is called or how the connection queue behaves.
+- The chosen documentation method was Spring RestDocs. I like this method because real objects are generated for 
   both requests and responses. This method doesn't present the interactive approach that Swagger allows, but having a
   generated `curl` command available is enough to compensate this missing feature.
