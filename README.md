@@ -66,7 +66,9 @@ Please add any details about your ideas and considerations to this README and ad
   In any case it's important to recognise the power of different approaches when the advantages are significant in real
   life scenarios.
 - Implementing the operation as a `PUT` request means that the request should be Idempotent. This was also taken care of
-  in the implementation. (Initially I forgot about it, but this was successfully patched in the end)
+  in the implementation. (Initially I forgot about it, but this was successfully patched in the end).
+- With the current implementation when connecting an already connected device the connection order is not altered. If 
+  this is desired, a disconnection operation should be performed in between the two connections.
 - The name/identifier of the charge points is assigned automatically for pragmatical purposes. In real life these ids
   could be set to more meaningful values or could be customised from the UI with operations to manipulate the properties
   of the park-car.
