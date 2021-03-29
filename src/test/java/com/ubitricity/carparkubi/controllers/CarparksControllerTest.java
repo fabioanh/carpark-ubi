@@ -15,7 +15,6 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -178,8 +177,7 @@ class CarparksControllerTest {
                 .contentType("application/json")
                 .characterEncoding("utf-8"));
         // then
-        response.andExpect(status().isNotFound())
-                .andDo(MockMvcResultHandlers.print());
+        response.andExpect(status().isNotFound());
     }
 
     @Test
